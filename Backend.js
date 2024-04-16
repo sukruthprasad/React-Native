@@ -11,8 +11,6 @@ const db = openDatabase(
     error => console.log('Database error', error),
   );
 
-
-
   const createUserTable = () => {
     db.executeSql(
       'CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR, email VARCHAR)',
