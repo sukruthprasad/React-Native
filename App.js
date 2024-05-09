@@ -11,15 +11,15 @@ const App = () => {
 
   const db = openDatabase(
     {
-      name: 'mydb',
+      name: 'projdb',
       location: 'default',
-      createFromLocation: './mydb.db',
+      createFromLocation: './internship.db',
     },
     () => {
       console.log('Database connected!');
     },
     error => console.log('Database error', error),
-  );  
+  );
 
   const createUserTable = () => {
     db.executeSql(
@@ -94,32 +94,55 @@ const App = () => {
     setToggleState(toggleState => !toggleState);
   };
 
+  const generateRandomString = length => {
+    let result = '';
+    const characters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  };
 
-  
-const generateRandomString = (length) => {
-  let result = '';
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const charactersLength = characters.length;
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-};
+  const generateRandomEmail = () => {
+    const randomString = generateRandomString(8);
+    return `${randomString}@example.com`;
+  };
 
+  const generateRandomUsers = () => {
+    for (let i = 0; i < 100; i++) {
+      const name = generateRandomString(8);
+      const email = generateRandomEmail();
+      createUser(name, email);
+    }
+  };
 
-const generateRandomEmail = () => {
-  const randomString = generateRandomString(8);
-  return `${randomString}@example.com`;
-};
+  const responseFromApi = [];
 
+  const onclickHandler = () => {
+    try {
+      fetch('http://localhost:8000/api/users/generateRandom')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
 
-const generateRandomUsers = () => {
-  for (let i = 0; i < 100; i++) {
-    const name = generateRandomString(8);
-    const email = generateRandomEmail();
-    createUser(name, email); 
-  }
-};
+          return response.json();
+        })
+        .then(data => {
+          console.log(data, 'data from api');
+          responseFromApi.push(...data);
+          console.log(responseFromApi,'response array')
+        })
+        .catch(error => {
+          console.error('There was a problem with the fetch operation:', error);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  console.log(responseFromApi,'response in global')
 
   return (
     <View
@@ -149,8 +172,13 @@ const generateRandomUsers = () => {
       <Button title="Show Data" onPress={() => listUsers(name, email)} />
       <Button title="Display Data" onPress={() => toggleComponent()} />
       <Button title="Gen Random" onPress={() => generateRandomUsers()} />
+      <Button title="onclickHandle" onPress={() => onclickHandler()} />
 
-      {toggleState === true ? <Dispdata listUsersItems={listUsersItems} /> : ''}
+      {toggleState === true ? (
+        <Dispdata responseFromApi={responseFromApi} />
+      ) : (
+        ''
+      )}
     </View>
   );
 };

@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, ScrollView} from 'react-native';
 
-const Dispdata = ({listUsersItems}) => {
+const Dispdata = ({responseFromApi}) => {
+  
   return (
     <>
       {/* <View style={{display: 'flex', width: '100%', overflow: 'scroll'}}>
@@ -25,7 +26,7 @@ const Dispdata = ({listUsersItems}) => {
           <Text style={styles.headerCell}>Email</Text>
         </View>
         <ScrollView style={styles.scrollView}>
-        {listUsersItems.map(item => (
+        {responseFromApi.map(item => (
             <View style={styles.row} key={item.id}>
               <Text style={styles.cell}>{item.name}</Text>
               <Text style={styles.cell}>{item.email}</Text>

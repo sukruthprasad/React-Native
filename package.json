@@ -9,7 +9,7 @@
     "start": "react-native start",
     "test": "jest",
     "serve": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon backend/nodeApi.js"
   },
   "dependencies": {
     "@react-navigation/native": "^6.1.17",
